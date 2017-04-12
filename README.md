@@ -141,6 +141,14 @@ By default this cookbook is run once, the nodes reboot, and the cluster comes ba
 
 Good luck!
 
+### Installation
+After setting the variables, run kube_master on the masters and kube_worker on the workers.  Reboot the nodes.  On one of the masters run the command:
+
+```
+bcf-cfg-ctl /etc/bcf-config.yaml
+```
+
+
 ## License and Authors
 
 Author:: Daniel Klopp (<dsklopp@gmail.com>)
