@@ -1,0 +1,26 @@
+plugin_type: cni-k8s
+service_cidr: <%= @service_cidr %>
+bcf_config: 
+  ip: <%= @bcf_controller_ip %>
+  passwd: <%= @password %>
+  segments:
+    - cidr: <%= @network_nodes %>
+      name: nodes
+    - cidr: <%= @network_default %>
+      name: default
+    - cidr: <%= @network_kube_system %>
+      name: kube-system
+  tenant: Kubernetes.cni
+  user: <%= @user %>
+  origination: cni
+etcd_config: 
+  - ip: "<%= @master1 %>"
+    port: 9121
+  - ip: "<%= @master2 %>"
+    port: 9121
+  - ip: "<%= @master3 %>"
+    port: 9121
+server_hostnames: 
+<% @server_hostnames.each do |hostname| %>
+  - <%= hostname %>
+<% end %>
