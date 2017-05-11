@@ -61,3 +61,6 @@ default['k8s']['hostname'].tap do |port|
 end
 
 default['k8s']['sdn']['bcf_repo_url']='https://null'
+
+default['k8s']['dns_service']['ip']='10.255.0.254'
+default['k8s']['dns_service']['domain']='cluster.local'
