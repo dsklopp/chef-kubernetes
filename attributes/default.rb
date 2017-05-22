@@ -61,3 +61,7 @@ default['k8s']['hostname'].tap do |port|
 end
 
 default['k8s']['sdn']['bcf_repo_url']='https://artifactory.nevint.com/artifactory/veda-rpm'
+
+default['k8s']['dns_service']['ip']='10.118.45.2'
+#default['k8s']['dns_service']['ip']='10.255.74.151'
+default['k8s']['dns_service']['domain']='cluster.local'
