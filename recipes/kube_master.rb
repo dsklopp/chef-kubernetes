@@ -122,9 +122,12 @@ template "/etc/systemd/system/kubelet.service" do
 	group "root"
 	mode "0644"
 	variables({
-		:pod_infra_container_image => node['k8s']['images']['pod_infra_container_image']
+		:pod_infra_container_image => node['k8s']['images']['pod_infra_container_image'],
+		:cluster_domain => node['k8s']['dns_service']['domain'],
+		:cluster_dns_server => node['k8s']['dns_service']['ip']
 		})
 	notifies :run, 'execute[systemctl daemon-reload]', :immediately
+	notifies :restart, 'service[kubelet]', :delayed
 end
 
 
