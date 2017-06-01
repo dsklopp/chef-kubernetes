@@ -12,6 +12,7 @@ default['k8s']['sdn']['bcf_username']='admin'
 default['k8s']['sdn']['bcf']['networks']['kube-system']='10.1.2.1/24'
 default['k8s']['sdn']['bcf']['networks']['default']='10.1.4.1/23'
 default['k8s']['sdn']['bcf']['networks']['nodes']='10.1.3.1/24'
+default['k8s']['sdn']['bcf']['networks']['extra']=[]
 default['k8s']['sdn']['bcf']['tenant']='Kubernetes'
 
 # To leverage the URL you must enable node['k8s']['airgap_install']

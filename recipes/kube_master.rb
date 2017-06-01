@@ -63,6 +63,7 @@ template "/etc/bcf-config.yaml" do
 		:network_kube_system => node['k8s']['sdn']['bcf']['networks']['kube-system'],
 		:network_default => node['k8s']['sdn']['bcf']['networks']['default'],
 		:network_nodes => node['k8s']['sdn']['bcf']['networks']['nodes'],
+		:network_extra => node['k8s']['sdn']['bcf']['networks']['extra'],
 		:server_hostnames => server_hostnames
 		})
 end
