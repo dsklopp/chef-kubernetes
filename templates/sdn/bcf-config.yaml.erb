@@ -10,9 +10,9 @@ bcf_config:
       name: default
     - cidr: <%= @network_kube_system %>
       name: kube-system
-<% @network_extra.each_pair do |name, network| %>
-    - cidr: <%= network %>
-      name: <%= name %>
+<% @network_extra.each do |net| %>
+    - cidr: <%= net['name'] %>
+      name: <%= net['network'] %>
 <% end %>
   tenant: Kubernetes.cni
   user: <%= @user %>
