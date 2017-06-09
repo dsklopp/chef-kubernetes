@@ -12,7 +12,7 @@ etcd_connect_2380=""
 node['k8s']['nodes'].each do |mac, server|
 	next unless server['master']
 	etcd_connect_2380 += server['hostname'] + "=http://" + server['ip']['node-port']
-	etcd_connect_2380 += ":2180,"
+	etcd_connect_2380 += ":2380,"
 end
 etcd_connect_2380.chomp(',')
 
