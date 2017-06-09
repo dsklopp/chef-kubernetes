@@ -2,7 +2,6 @@ include_recipe "#{cookbook_name}::_kube_core"
 
 api_servers=""
 node['k8s']['nodes'].each do |mac, server|
-	Chef::Log.info(server['master'])
 	next unless server['master']
 	api_servers += "http://" + server['ip']['node-port'] + ":8080,"
 end

@@ -2,7 +2,6 @@ include_recipe "#{cookbook_name}::_kube_core"
 
 bcf_etcd_connect=""
 node['k8s']['nodes'].each do |mac, server|
-	Chef::Log.fatal(server)
 	next unless server['master']
 	bcf_etcd_connect += server['hostname'] + "=http://" + server['ip']['node-port']
 	bcf_etcd_connect += ":9122,"
@@ -11,7 +10,6 @@ bcf_etcd_connect.chomp(',')
 
 etcd_connect_2380=""
 node['k8s']['nodes'].each do |mac, server|
-	Chef::Log.fatal(server)
 	next unless server['master']
 	etcd_connect_2380 += server['hostname'] + "=http://" + server['ip']['node-port']
 	etcd_connect_2380 += ":2180,"
@@ -20,7 +18,6 @@ etcd_connect_2380.chomp(',')
 
 etcd_connect_2379=""
 node['k8s']['nodes'].each do |mac, server|
-	Chef::Log.fatal(server)
 	next unless server['master']
 	etcd_connect_2379 += server['hostname'] + "=http://" + server['ip']['node-port']
 	etcd_connect_2379 += ":2379,"
