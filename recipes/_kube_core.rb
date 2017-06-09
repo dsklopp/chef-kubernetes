@@ -1,8 +1,18 @@
 include_recipe "#{cookbook_name}::_kube_docker"
 
-master1=node['k8s']['masters']['ipaddr']['kube-master-1']
-master2=node['k8s']['masters']['ipaddr']['kube-master-2']
-master3=node['k8s']['masters']['ipaddr']['kube-master-3']
+bcf_etcd_masters=""
+node['k8s']['nodes'].each do |mac, server|
+	Chef::Log.info(server)
+	next unless server['master'] == "true"
+	bcf_etcd_masters += server['ip']['node-port'] + ":9121,"
+end
+bcf_etcd_masters.chomp(',')
+
+master_ips=[]
+node['k8s']['nodes'].each do |mac, server|
+	next unless server['master']
+	master_ips << server['ip']['node-port']
+end
 
 [ 	
 	"/etc/kubernetes", 
@@ -129,9 +139,7 @@ template "/etc/cni/net.d/bcf.conf" do
 	owner "root"
 	mode "0644"
 	variables({
-		:master1 => node['k8s']['masters']['ipaddr']['kube-master-1'],
-		:master2 => node['k8s']['masters']['ipaddr']['kube-master-2'],
-		:master3 => node['k8s']['masters']['ipaddr']['kube-master-3']
+		:etcd_masters => bcf_etcd_masters
 		})
 end
 
@@ -156,7 +164,7 @@ template "/etc/sysconfig/network-scripts/ifcfg-node-port" do
 	owner "root"
 	group "root"
 	variables ({
-		:ipaddr => node['k8s']['node-ports'][node['macaddress']],
+		:ipaddr => node['k8s']['nodes'][node['macaddress']]['ip']['node-port'],
 		:netmask => node['k8s']['node-ports']['netmask']
 		})
 end
@@ -171,7 +179,7 @@ template "/etc/sysconfig/network-scripts/rule-node-port" do
 	group "root"
 	mode "0755"
 	variables ({
-		:ipaddr => node['k8s']['node-ports'][node['macaddress']]
+		:ipaddr => node['k8s']['nodes'][node['macaddress']]['ip']['node-port']
 		})
 end
 
@@ -181,7 +189,7 @@ template "/etc/sysconfig/network-scripts/route-node-port" do
 	group "root"
 	mode "0755"
 	variables({
-		:ipaddr => node['k8s']['node-ports'][node['macaddress']],
+		:ipaddr => node['k8s']['nodes'][node['macaddress']]['ip']['node-port'],
 		:k8s_cidr => node['k8s']['node-ports']['cidr'],
 		:k8s_default_gw => node['k8s']['node-ports']['gw']
 		})
@@ -193,9 +201,20 @@ template "/etc/systemd/system/kube-proxy.service" do
 	group "root"
 	mode "0644"
 	variables({
-		:master => master1,
+		:master => node['k8s']['masters']['cname'],
 		:image => node['k8s']['images']['kube-proxy'],
 		:service_cidr => node['k8s']['service_network']['cidr']
 		})
 	notifies :run, 'execute[systemctl daemon-reload]', :immediately
 end
+
+template "/etc/bcf-agent.yaml" do
+	source "sdn/bcf-agent.yaml.erb"
+	owner "root"
+	group "root"
+	mode "0644"
+	variables({
+		:masters => master_ips
+		})
+end
+

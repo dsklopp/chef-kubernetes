@@ -12,7 +12,7 @@ platforms:
   - name: centos-7.3
 
 suites:
-  - name: kube-master
+  - name: kube-master-1
     driver:
       network:
         - ["private_network", {ip: "192.168.7.10"}]
@@ -21,10 +21,28 @@ suites:
       k8s:
         sdn:
           bcf_repo_url: 'https://artifactory.nevint.com/artifactory/veda-rpm'
-  - name: kube-worker
+  - name: kube-master-2
     driver:
       network:
         - ["private_network", {ip: "192.168.7.11"}]
+    run_list: chef-kubernetes::kube_master
+    attributes:
+      k8s:
+        sdn:
+          bcf_repo_url: 'https://artifactory.nevint.com/artifactory/veda-rpm'
+  - name: kube-master-3
+    driver:
+      network:
+        - ["private_network", {ip: "192.168.7.12"}]
+    run_list: chef-kubernetes::kube_master
+    attributes:
+      k8s:
+        sdn:
+          bcf_repo_url: 'https://artifactory.nevint.com/artifactory/veda-rpm'
+  - name: worker-1
+    driver:
+      network:
+        - ["private_network", {ip: "192.168.7.13"}]
     run_list: chef-kubernetes::kube_worker
     attributes:
       k8s:

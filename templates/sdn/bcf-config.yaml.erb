@@ -14,16 +14,14 @@ bcf_config:
     - cidr: <%= net['name'] %>
       name: <%= net['network'] %>
 <% end %>
-  tenant: Kubernetes.cni
+  tenant: <%= @tenant %>
   user: <%= @user %>
   origination: cni
 etcd_config: 
-  - ip: "<%= @master1 %>"
-    port: 9121
-  - ip: "<%= @master2 %>"
-    port: 9121
-  - ip: "<%= @master3 %>"
-    port: 9121
+<% @masters.each do |master| %>
+    - ip: "<%=  master %>"
+      port: 9121
+<% end %>
 server_hostnames: 
 <% @server_hostnames.each do |hostname| %>
   - <%= hostname %>

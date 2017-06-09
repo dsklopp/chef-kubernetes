@@ -1,7 +1,5 @@
 etcd_config:
-  - ip : <%= @master1 %>
+<% @masters.each do |master| %>
+  - ip : <%= master %>
     port: 9121
-  - ip : <%= @master2 %>
-    port: 9121
-  - ip : <%= @master3 %>
-    port: 9121
+<% end %>

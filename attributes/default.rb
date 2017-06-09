@@ -1,7 +1,7 @@
 
 default['k8s']['airgap_install']=false
 
-default['k8s']['sdn']['interfaces']="-u eno2 -u eno3 -u eno4"
+default['k8s']['sdn']['interfaces']="-u eno2 -u eno3"
 default['k8s']['sdn']['netmask']="255.255.252.0"
 
 default['k8s']['yum_repos']['purge_old'] = true
@@ -40,25 +40,37 @@ default['k8s']['node-ports']['gw']='10.1.3.1'
 default['k8s']['service_network']['netmask']='16'
 default['k8s']['service_network']['network']='10.255.0.1'
 default['k8s']['service_network']['cidr']='10.255.0.1/16'
-
-default['k8s']['masters']['ipaddr'].tap do |ipaddr|
-	ipaddr['kube-master-1'] = '10.1.3.32'
-	ipaddr['kube-master-2'] = '10.1.3.33'
-	ipaddr['kube-master-3'] = '10.1.3.34'
+default['k8s']['nodes'].default = {
+	'ip': {
+		'node-port': '192.168.1.1'
+	},
+	'master': false,
+	'worker': true,
+	'hostname': 'unspecified'
+}
+default['k8s']['nodes']['08:00:27:8F:EF:23'].tap do |server|
+	server['ip']['node-port']='192.168.7.10'
+	server['master']=true
+	server['worker']=false
+	server['hostname']='kube-master-1'
 end
-
-default['k8s']['node-ports'].tap do |port|
-	port['01:23:45:67:89:AB']='10.1.3.32'
-	port['01:23:45:67:89:AC']='10.1.3.33'
-	port['01:23:45:67:89:AD']='10.1.3.34'
-	port['01:23:45:67:89:AE']='10.1.3.35'
+default['k8s']['nodes']['01:23:45:67:89:AC'].tap do |server|
+	server['ip']['node-port']='192.168.7.11'
+	server['master']=true
+	server['worker']=false
+	server['hostname']='kube-master-2'
 end
-
-default['k8s']['hostname'].tap do |port|
-	port['01:23:45:67:89:AB']='kube-master-1'
-	port['01:23:45:67:89:AC']='kube-master-2'
-	port['01:23:45:67:89:AD']='kube-master-3'
-	port['01:23:45:67:89:AE']='worker-1'
+default['k8s']['nodes']['01:23:45:67:89:AD'].tap do |server|
+	server['ip']['node-port']='192.168.7.12'
+	server['master']=true
+	server['worker']=false
+	server['hostname']='kube-master-3'
+end
+default['k8s']['nodes']['01:23:45:67:89:AE'].tap do |server|
+	server['ip']['node-port']='192.168.7.13'
+	server['master']=false
+	server['worker']=true
+	server['hostname']='worker-1'
 end
 
 default['k8s']['sdn']['bcf_repo_url']='https://artifactory.nevint.com/artifactory/veda-rpm'
@@ -66,3 +78,5 @@ default['k8s']['sdn']['bcf_repo_url']='https://artifactory.nevint.com/artifactor
 default['k8s']['dns_service']['ip']='10.118.45.2'
 #default['k8s']['dns_service']['ip']='10.255.74.151'
 default['k8s']['dns_service']['domain']='cluster.local'
+default['k8s']['cluster_name']='test'
+

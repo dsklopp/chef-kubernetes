@@ -1,8 +1,31 @@
 include_recipe "#{cookbook_name}::_kube_core"
 
-master1=node['k8s']['masters']['ipaddr']['kube-master-1']
-master2=node['k8s']['masters']['ipaddr']['kube-master-2']
-master3=node['k8s']['masters']['ipaddr']['kube-master-3']
+bcf_etcd_connect=""
+node['k8s']['nodes'].each do |mac, server|
+	Chef::Log.fatal(server)
+	next unless server['master']
+	bcf_etcd_connect += server['hostname'] + "=http://" + server['ip']['node-port']
+	bcf_etcd_connect += ":9122,"
+end
+bcf_etcd_connect.chomp(',')
+
+etcd_connect_2380=""
+node['k8s']['nodes'].each do |mac, server|
+	Chef::Log.fatal(server)
+	next unless server['master']
+	etcd_connect_2380 += server['hostname'] + "=http://" + server['ip']['node-port']
+	etcd_connect_2380 += ":2180,"
+end
+etcd_connect_2380.chomp(',')
+
+etcd_connect_2379=""
+node['k8s']['nodes'].each do |mac, server|
+	Chef::Log.fatal(server)
+	next unless server['master']
+	etcd_connect_2379 += server['hostname'] + "=http://" + server['ip']['node-port']
+	etcd_connect_2379 += ":2379,"
+end
+etcd_connect_2379.chomp(',')
 
 execute "pull docker etcd" do
 	command "docker pull #{node['k8s']['images']['etcd']}"
@@ -15,9 +38,9 @@ template "/etc/systemd/system/bcf-etcd.service" do
 	mode "0644"
 	variables({
 		:etcd_image => node['k8s']['images']['etcd'],
-		:hostname => node['k8s']['hostname'][node['macaddress']],
-		:ipaddr => node['k8s']['node-ports'][node['macaddress']],
-		:kube_masters => "kube-master-1=http://#{master1}:9122,kube-master-2=http://#{master2}:9122,kube-master-3=http://#{master3}:9122"
+		:hostname => node['k8s']['nodes'][node['macaddress']]['hostname'],
+		:ipaddr => node['k8s']['nodes'][node['macaddress']]['ip']['node-port'],
+		:kube_masters => bcf_etcd_connect
 		})
 	notifies :run, 'execute[systemctl daemon-reload]', :immediately
 end
@@ -28,9 +51,9 @@ template "/etc/systemd/system/etcd.service" do
 	mode "0644"
 	variables({
 		:etcd_image => node['k8s']['images']['etcd'],
-		:hostname => node['k8s']['hostname'][node['macaddress']],
-		:ipaddr => node['k8s']['node-ports'][node['macaddress']],
-		:kube_masters => "kube-master-1=http://#{master1}:2380,kube-master-2=http://#{master2}:2380,kube-master-3=http://#{master3}:2380"
+		:hostname => node['k8s']['nodes'][node['macaddress']]['hostname'],
+		:ipaddr => node['k8s']['nodes'][node['macaddress']]['ip']['node-port'],
+		:kube_masters => etcd_connect_2380
 		})
 	notifies :run, 'execute[systemctl daemon-reload]', :immediately
 end
@@ -43,8 +66,14 @@ service "bcf-etcd" do
 end
 
 server_hostnames=[]
-node['k8s']['hostname'].each do |mac, hostname|
-	server_hostnames << hostname
+node['k8s']['nodes'].each do |mac, server|
+	server_hostnames << server['hostname']
+end
+
+master_ips=[]
+node['k8s']['nodes'].each do |mac, server|
+	next unless server['master']
+	master_ips << server['ip']['node-port']
 end
 
 template "/etc/bcf-config.yaml" do
@@ -53,10 +82,9 @@ template "/etc/bcf-config.yaml" do
 	owner "root"
 	mode "0644"
 	variables({
-		:master1 => master1,
-		:master2 => master2,
-		:master3 => master3,
+		:masters => master_ips,
 		:bcf_controller_ip => node['k8s']['sdn']['bcf_controller_ip'],
+		:tenant => node['k8s']['sdn']['bcf']['tenant'],
 		:service_cidr => node['k8s']['service_network']['cidr'],
 		:password => node['k8s']['sdn']['bcf_password'],
 		:user => node['k8s']['sdn']['bcf_username'],
@@ -65,18 +93,6 @@ template "/etc/bcf-config.yaml" do
 		:network_nodes => node['k8s']['sdn']['bcf']['networks']['nodes'],
 		:network_extra => node['k8s']['sdn']['bcf']['networks']['extra'],
 		:server_hostnames => server_hostnames
-		})
-end
-
-template "/etc/bcf-agent.yaml" do
-	source "sdn/bcf-agent.yaml.erb"
-	owner "root"
-	group "root"
-	mode "0644"
-	variables({
-		:master1 => master1,
-		:master2 => master2,
-		:master3 => master3
 		})
 end
 
@@ -89,7 +105,7 @@ template "/etc/kubernetes/manifests/kube-apiserver.yaml" do
 		:image => node['k8s']['images']['kube-apiserver'],
 		:port => 8080,
 		:kubelet_port => 10250,
-		:etcd_servers => "http://#{master1}:2379,http://#{master2}:2379,http://#{master3}:2379",
+		:etcd_servers => etcd_connect_2379,
 		:cluster_ip_range => node['k8s']['service_network']['cidr'],
 		:kubemaster_cname => node['k8s']['masters']['cname']
 		})
@@ -113,7 +129,7 @@ template "/etc/kubernetes/manifests/kube-controller-manager.yaml" do
 	variables ({
 		:image => node['k8s']['images']['kube-controller'],
 		:master => "127.0.0.1",
-		:cluster_name => "veda-kube"
+		:cluster_name => node['k8s']['cluster_name']
 		})
 end
 
