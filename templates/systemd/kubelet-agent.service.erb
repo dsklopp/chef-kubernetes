@@ -5,6 +5,7 @@ Documentation=http://kubernetes.io/docs
 [Service]
 ExecStart=/usr/bin/kubelet \
 	--pod-manifest-path /etc/kubernetes/manifests/ \
+        --allow-privileged true \
 	--api-servers <%= @api_servers %> \
 	--port=10250 \
 	--network-plugin=cni \
