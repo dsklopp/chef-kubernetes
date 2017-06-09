@@ -2,7 +2,6 @@ include_recipe "#{cookbook_name}::_kube_docker"
 
 bcf_etcd_masters=""
 node['k8s']['nodes'].each do |mac, server|
-	Chef::Log.info(server)
 	next unless server['master'] == "true"
 	bcf_etcd_masters += server['ip']['node-port'] + ":9121,"
 end
