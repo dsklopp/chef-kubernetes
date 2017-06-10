@@ -28,18 +28,20 @@ execute "pull docker etcd" do
 	command "docker pull #{node['k8s']['images']['etcd']}"
 end
 
-template "/etc/systemd/system/bcf-etcd.service" do
-	source "systemd/bcf-etcd.service.erb"
-	owner "root"
-	group "root"
-	mode "0644"
-	variables({
-		:etcd_image => node['k8s']['images']['etcd'],
-		:hostname => node['k8s']['nodes'][node['macaddress']]['hostname'],
-		:ipaddr => node['k8s']['nodes'][node['macaddress']]['ip']['node-port'],
-		:kube_masters => bcf_etcd_connect
-		})
-	notifies :run, 'execute[systemctl daemon-reload]', :immediately
+if node['k8s']['sdn']['solution'] == "bcf"
+	template "/etc/systemd/system/bcf-etcd.service" do
+		source "systemd/bcf-etcd.service.erb"
+		owner "root"
+		group "root"
+		mode "0644"
+		variables({
+			:etcd_image => node['k8s']['images']['etcd'],
+			:hostname => node['k8s']['nodes'][node['macaddress']]['hostname'],
+			:ipaddr => node['k8s']['nodes'][node['macaddress']]['ip']['node-port'],
+			:kube_masters => bcf_etcd_connect
+			})
+		notifies :run, 'execute[systemctl daemon-reload]', :immediately
+	end
 end
 template "/etc/systemd/system/etcd.service" do
 	source "systemd/etcd.service.erb"
@@ -58,8 +60,11 @@ end
 service "etcd" do
 	action [ :enable, :start ]
 end
-service "bcf-etcd" do
-	action [ :enable, :start ]
+
+if node['k8s']['sdn']['solution'] == "bcf"
+	service "bcf-etcd" do
+		action [ :enable, :start ]
+	end
 end
 
 server_hostnames=[]
@@ -148,8 +153,10 @@ service "kubelet" do
 	action [ :enable, :start ]
 end
 
-service "bcf-agent" do
-	action [ :enable, :start ]
+if node['k8s']['sdn']['solution'] == "bcf"
+	service "bcf-agent" do
+		action [ :enable, :start ]
+	end
 end
 
 service "kube-proxy" do
