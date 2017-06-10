@@ -6,6 +6,11 @@ default['k8s']['sdn']['netmask']="255.255.252.0"
 
 default['k8s']['yum_repos']['purge_old'] = true
 
+default['k8s']['sdn']['solution']="flannel" # select bcf for BigSwitch
+# Flannel specific settings
+default['k8s']['sdn']['flannel']
+
+# BCF specific settings
 default['k8s']['sdn']['bcf_controller_ip']='10.1.1.2'
 default['k8s']['sdn']['bcf_password']='123123123'
 default['k8s']['sdn']['bcf_username']='admin'
