@@ -1,15 +1,19 @@
 # chef-kubernetes-cookbook
 
-Creates multi-master Kubernetes cluster, designed for air gap Enterprise systems.  This is provided as is, please submit issues as necessary, but use at own risk.
+Creates multi-master Kubernetes cluster from the ground up.  It supports air gap Enterprise installations.  It can, theoretically, install almost any version of Kubernetes and will be upgraded over time.  Backwards compatibility is not a goal at this time, we move forward with features not backwards.  At the present this cookbook builds 1.6.4, but changing the version number is relatively easy to do.
 
-This cookbook was built specifically to utilize the Big Switch SDN (http://www.bigswitch.com/) which is our SDN of choice.  This is the cookbook we use to deploy our production and dev Kubernetes cluster on baremetal and eventually AWS.  Future platforms may be supported.
+This cookbook is provided as is, please submit issues as necessary, but use at your own risk.
+
+This cookbook was built specifically to utilize the Big Switch SDN (http://www.bigswitch.com/) which is our SDN of choice.  Additional support for Flannel was added for single node setups and dev clusters.  This is the cookbook we use to deploy our production and dev Kubernetes cluster on baremetal and eventually AWS.  Future platforms may be supported.
 
 ## Supported Platforms
 
  * Centos 7.3
 
+Much of the setup can leverage itself well for other platforms with a little work.  All that is required is an up to date kernel, systemd, and up to date user space.  The rest are GoLang static binaries and x86 containers.
+
 ## Architecture
-Master nodes and worker nodes are distinct physical systems.  Theoretically we can use the same system but this cookbook has not been tested in that way.
+Master nodes and worker nodes can be distinct systems or combined.
 
 Master nodes run the following services:
 
@@ -30,23 +34,23 @@ Worker nodes run the following services:
 
 All manifest files are installed under /etc/kubernetes/manifests .
 
-Every node has 4 interfaces.  In our implementation these are eno1, eno2, eno3, and eno4.  Presently eno2, eno3 and eno4 are used by the SDN (Chef attribute node['k8s']['sdn']['interfaces']).  eno1 is used by the system for general management and is not used by Kubernetes at this time.  In the future we expect to bind all four interfaces to the SDN.
+Every node has 4 interfaces.  In our implementation these are eno1, eno2, eno3, and eno4.  Presently eno2 and eno3 are used by the SDN (Chef attribute node['k8s']['sdn']['interfaces']).  eno1 is used by the system for general management and is not used by Kubernetes at this time.  In the future we expect to bind all four interfaces to the SDN solution.
 
 ## Setup
-This cookbook was designed to work in air gap enterprise setups and HA solutions.  As such, there are some steps that may seem needlessly complicated to those who only need kops or the beta tool kubeadm.
+This cookbook was designed to work in air gap enterprise setups and HA solutions.  As such, there are some steps that may seem needlessly complicated to those who only need kops or kubeadm.
 
 ### Limitations
-There must be 3 master nodes.  There can be at least 1 worker node.
+There can be an ar
 
 ### Package Repositories
 
-First things first, repositories must be set up.  THis cookbook can use your own private repositories (and this is how we use it inhouse).  If you choose to use public repositories, you can do this but you need to manually provide the BCF CNI plugin repository in a wrapper cookbook.  
+First things first, repositories must be set up.  This cookbook can use your own private repositories (and this is how we use it inhouse).  If you choose to use public repositories, you can do this but you need to manually provide the BCF CNI plugin repository in a wrapper cookbook or leverage Flannel instead.
 
 To use a private repository you need to mirror a minimum of:
 
  * Mirror the Centos yum repository
  * Mirror the docker yum repository
- * Stage the BCF SDN RPM into an accessible yum repository
+ * Stage the BCF SDN RPM into an accessible yum repository (not required if using flannel)
  * Mirror Kubernetes docker images to your own private repository
  * Stage Kubernete binaries at an accessible HTTP endpoint
  * Stage CNI plugin binaries at an accessible HTTP endpoint
@@ -60,7 +64,7 @@ Next, define your cluster.  Only 3 kubernetes masters are supported, no more, no
 First, set the interfaces to use for Kubernetes and BCF SDN.
 
 ```
-default['k8s']['sdn']['interfaces']="-u eno2 -u eno3 -u eno4"
+default['k8s']['sdn']['interfaces']="-u eno2 -u eno3"
 ```
 
 next, configure the SDN.  These are specific to BCF.
