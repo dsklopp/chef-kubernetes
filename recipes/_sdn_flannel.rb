@@ -5,14 +5,14 @@ node['k8s']['nodes'].each do |mac, server|
 end
 
 template "/etc/kubernetes/kube-flannel.yml" do
-	source "kube-flannel.yml.erb"
+	source "sdn/kube-flannel.yml.erb"
 	owner "root"
 	group "root"
 	mode "0644"
 end
 
 template "/etc/kubernetes/kube-flannel-rbac.yml" do
-	source "kube-flannel-rbac.yml.erb"
+	source "sdn/kube-flannel-rbac.yml.erb"
 	owner "root"
 	group "root"
 	mode "0644"
