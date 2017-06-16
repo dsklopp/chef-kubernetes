@@ -52,28 +52,28 @@ template "/etc/sysconfig/network-scripts/ifcfg-node-port" do
 		})
 end
 
-execute "create route table node-port" do
-	command 'echo "1 node-port" >> /etc/iproute2/rt_tables'
-end
+#execute "create route table node-port" do
+#	command 'echo "1 node-port" >> /etc/iproute2/rt_tables'
+#end
 
-template "/etc/sysconfig/network-scripts/rule-node-port" do
-	source "sysconfig/rule-node-port.erb"
-	owner "root"
-	group "root"
-	mode "0755"
-	variables ({
-		:ipaddr => node['k8s']['nodes'][node['macaddress']]['ip']['node-port']
-		})
-end
+#template "/etc/sysconfig/network-scripts/rule-node-port" do
+#	source "sysconfig/rule-node-port.erb"
+#	owner "root"
+#	group "root"
+#	mode "0755"
+#	variables ({
+#		:ipaddr => node['k8s']['nodes'][node['macaddress']]['ip']['node-port']
+#		})
+#end
 
-template "/etc/sysconfig/network-scripts/route-node-port" do
-	source "sysconfig/route-node-port.erb"
-	owner "root"
-	group "root"
-	mode "0755"
-	variables({
-		:ipaddr => node['k8s']['nodes'][node['macaddress']]['ip']['node-port'],
-		:k8s_cidr => node['k8s']['node-ports']['cidr'],
-		:k8s_default_gw => node['k8s']['node-ports']['gw']
-		})
-end
+#template "/etc/sysconfig/network-scripts/route-node-port" do
+#	source "sysconfig/route-node-port.erb"
+#	owner "root"
+#	group "root"
+#	mode "0755"
+#	variables({
+#		:ipaddr => node['k8s']['nodes'][node['macaddress']]['ip']['node-port'],
+#		:k8s_cidr => node['k8s']['node-ports']['cidr'],
+#		:k8s_default_gw => node['k8s']['node-ports']['gw']
+#		})
+#end
