@@ -8,7 +8,7 @@ unless node['k8s']['airgap_install']
 end
 
 package "docker-engine" do
-	version "1.11.2-1.el7.centos"
+	version "1.12.6-1.el7.centos"
 	action :install
 	notifies :restart, "service[docker]", :delayed
 end
