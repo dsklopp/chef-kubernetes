@@ -181,7 +181,7 @@ end
 
 execute "kubectl apply kube-proxy.yaml" do
 	command "kubectl apply -f /etc/kubernetes/kube-proxy.yaml"
-	only_if {{ node['k8s']['nodes'][node.macaddress]['node-port'] == masters[0] }} # only run on one node
+	only_if { node['k8s']['nodes'][node.macaddress]['node-port'] == masters[0] } # only run on one node
 end 
 
 #service "kube-proxy" do
