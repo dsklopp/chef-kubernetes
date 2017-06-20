@@ -24,6 +24,14 @@ node['k8s']['nodes'].each do |mac, server|
 end
 etcd_connect_2379.chomp(',')
 
+
+masters=[]
+node['k8s']['nodes'].each do |mac, server|
+	next unless server['master']
+	masters << server['ip']['node-port']
+end
+masters.sort!
+
 execute "pull docker etcd" do
 	command "docker pull #{node['k8s']['images']['etcd']}"
 end
@@ -159,6 +167,23 @@ if node['k8s']['sdn']['solution'] == "bcf"
 	end
 end
 
-service "kube-proxy" do
-	action [ :enable, :start]
+# Install daemonsets if the primary master
+template "/etc/kubernetes/kube-proxy.yaml" do
+	source "daemonsets/kube-proxy.yaml.erb"
+	owner "root"
+	group "root"
+	mode "0644"
+	variables ({
+		:image => node['k8s']['images']['kube-proxy'],
+		:master => node['k8s']['masters']['cname']
+	})
 end
+
+execute "kubectl apply kube-proxy.yaml" do
+	command "kubectl apply -f /etc/kubernetes/kube-proxy.yaml"
+	only_if {{ node['k8s']['nodes'][node.macaddress]['node-port'] == masters[0] }} # only run on one node
+end 
+
+#service "kube-proxy" do
+#	action [ :enable, :start]
+#end
