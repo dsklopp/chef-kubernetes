@@ -27,6 +27,6 @@ end
 service "kubelet" do
 	action [ :enable, :start]
 end
-service "kube-proxy" do
-	action [ :enable, :start]
-end
+#service "kube-proxy" do
+#	action [ :enable, :start]
+#end
