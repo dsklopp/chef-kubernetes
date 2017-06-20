@@ -1,4 +1,17 @@
 include_recipe "#{cookbook_name}::_kube_docker"
+include_recipe "sysctl::default"
+
+sysctl_param "net.bridge.bridge-nf-call-iptables" do
+	value 1
+end
+
+sysctl_param "net.bridge.bridge-nf-call-ip6tables" do
+	value 1
+end
+
+sysctl_param "net.bridge.bridge-nf-call-arptables" do
+	value 1
+end
 
 [ 	
 	"/etc/kubernetes", 
