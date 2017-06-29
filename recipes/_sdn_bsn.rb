@@ -47,7 +47,7 @@ template "/etc/sysconfig/network-scripts/ifcfg-node-port" do
 	owner "root"
 	group "root"
 	variables ({
-		:ipaddr => node['k8s']['nodes'][node['macaddress']]['ip']['node-port'],
+		:ipaddr => node['k8s']['nodes'][node['k8s']['macaddress']]['ip']['node-port'],
 		:netmask => node['k8s']['node-ports']['netmask']
 		})
 end
@@ -62,7 +62,7 @@ end
 #	group "root"
 #	mode "0755"
 #	variables ({
-#		:ipaddr => node['k8s']['nodes'][node['macaddress']]['ip']['node-port']
+#		:ipaddr => node['k8s']['nodes'][node['k8s']['macaddress']]['ip']['node-port']
 #		})
 #end
 
@@ -72,7 +72,8 @@ end
 #	group "root"
 #	mode "0755"
 #	variables({
-#		:ipaddr => node['k8s']['nodes'][node['macaddress']]['ip']['node-port'],
+#		:ipaddr => node['k8s']['nodes'][node['k8s']['macaddress']]['ip']['node-port'],
+
 #		:k8s_cidr => node['k8s']['node-ports']['cidr'],
 #		:k8s_default_gw => node['k8s']['node-ports']['gw']
 #		})
