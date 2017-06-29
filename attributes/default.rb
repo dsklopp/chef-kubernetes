@@ -1,4 +1,5 @@
 
+default['k8s']['macaddress']=node['macaddress']
 default['k8s']['airgap_install']=false
 
 default['k8s']['sdn']['interfaces']="-u eno2 -u eno3"

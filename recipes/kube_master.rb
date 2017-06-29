@@ -44,8 +44,8 @@ if node['k8s']['sdn']['solution'] == "bcf"
 		mode "0644"
 		variables({
 			:etcd_image => node['k8s']['images']['etcd'],
-			:hostname => node['k8s']['nodes'][node['macaddress']]['hostname'],
-			:ipaddr => node['k8s']['nodes'][node['macaddress']]['ip']['node-port'],
+			:hostname => node['k8s']['nodes'][node['k8s']['macaddress']]['hostname'],
+			:ipaddr => node['k8s']['nodes'][node['k8s']['macaddress']]['ip']['node-port'],
 			:kube_masters => bcf_etcd_connect
 			})
 		notifies :run, 'execute[systemctl daemon-reload]', :immediately
@@ -58,8 +58,8 @@ template "/etc/systemd/system/etcd.service" do
 	mode "0644"
 	variables({
 		:etcd_image => node['k8s']['images']['etcd'],
-		:hostname => node['k8s']['nodes'][node['macaddress']]['hostname'],
-		:ipaddr => node['k8s']['nodes'][node['macaddress']]['ip']['node-port'],
+		:hostname => node['k8s']['nodes'][node['k8s']['macaddress']]['hostname'],
+		:ipaddr => node['k8s']['nodes'][node['k8s']['macaddress']]['ip']['node-port'],
 		:kube_masters => etcd_connect_2380
 		})
 	notifies :run, 'execute[systemctl daemon-reload]', :immediately
@@ -181,7 +181,7 @@ end
 
 execute "kubectl apply kube-proxy.yaml" do
 	command "kubectl apply -f /etc/kubernetes/kube-proxy.yaml"
-	only_if { node['k8s']['nodes'][node.macaddress]['node-port'] == masters[0] } # only run on one node
+	only_if { node['k8s']['nodes'][node['k8s']['macaddress']['node-port'] == masters[0] } # only run on one node
 end 
 
 #service "kube-proxy" do
