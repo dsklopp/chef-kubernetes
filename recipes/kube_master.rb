@@ -184,6 +184,6 @@ execute "kubectl apply kube-proxy.yaml" do
 	only_if { node['k8s']['nodes'][node.k8s.macaddress]['node-port'] == masters[0] } # only run on one node
 end 
 
-#service "kube-proxy" do
-#	action [ :enable, :start]
-#end
+service "kube-proxy" do
+	action [ :enable, :start]
+end
