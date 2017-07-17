@@ -32,6 +32,7 @@ default['k8s']['masters']['cname']='kube-master'
 
 default['k8s']['images'].tap do |image|
 	image['etcd'] = "quay.io/coreos/etcd:v3.1.5"
+	image['etcd-pwx'] = "quay.io/coreos/etcd"
 	image['kube-apiserver'] = "gcr.io/google_containers/kube-apiserver-amd64:v1.5.6"
 	image['kube-proxy'] = "gcr.io/google_containers/kube-proxy-amd64:v1.5.6"
 	image['kube-scheduler']="gcr.io/google_containers/kube-scheduler-amd64:v1.5.6"

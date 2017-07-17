@@ -25,6 +25,14 @@ end
 etcd_connect_2379.chomp(',')
 
 
+etcd_connect_2381=""
+node['k8s']['nodes'].each do |mac, server|
+	next unless server['master']
+	etcd_connect_2381 += "http://" + server['ip']['node-port']
+	etcd_connect_2381 += ":2381,"
+end
+etcd_connect_2381.chomp(',')
+
 masters=[]
 node['k8s']['nodes'].each do |mac, server|
 	next unless server['master']
@@ -51,6 +59,21 @@ if node['k8s']['sdn']['solution'] == "bcf"
 		notifies :run, 'execute[systemctl daemon-reload]', :immediately
 	end
 end
+
+template "/etc/systemd/system/pwx-etcd.service" do
+	source "systemd/pwx-etcd.service.erb"
+	owner "root"
+	group "root"
+	mode "0644"
+	variables({
+		:etcd_image => node['k8s']['images']['etcd-pwx'],
+		:hostname => node['k8s']['nodes'][node['k8s']['macaddress']]['hostname'],
+		:ipaddr => node['k8s']['nodes'][node['k8s']['macaddress']]['ip']['node-port'],
+		:kube_masters => etcd_connect_2380
+		})
+	notifies :run, 'execute[systemctl daemon-reload]', :immediately
+end
+
 template "/etc/systemd/system/etcd.service" do
 	source "systemd/etcd.service.erb"
 	owner "root"
