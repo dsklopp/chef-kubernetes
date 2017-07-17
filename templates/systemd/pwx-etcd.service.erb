@@ -1,0 +1,27 @@
+[Unit]
+Description=bcf-etcd: The etcd Agent for bcf
+Documentation=https://github.com/coreos/etcd
+
+[Service]
+ExecStart=/usr/bin/docker \
+    run --rm --net=host \
+    --name pwx-etcd \
+    --volume=/var/lib/etcd-pwx:/var/lib/etcd \
+    --volume=/etc/ssl/certs:/etc/ssl/certs \
+        <%= @etcd_image %> \
+    /usr/local/bin/etcd \
+    --listen-peer-urls http://0.0.0.0:2381 \
+    --listen-client-urls http://0.0.0.0:2378 \
+    --data-dir /var/lib/etcd \
+    --advertise-client-urls http://0.0.0.0:2378 \
+    --initial-cluster-token bcf-etcd-cluster \
+    --initial-cluster-state new \
+    --name <%= @hostname %> \
+    --initial-advertise-peer-urls http://<%= @ipaddr %>:2381 \
+    --initial-cluster <%= @kube_masters %>
+Restart=always
+StartLimitInterval=0
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
