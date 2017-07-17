@@ -2,6 +2,8 @@
 default['k8s']['macaddress']=node['macaddress']
 default['k8s']['airgap_install']=false
 
+default['k8s']['storage']['solution']="default"
+
 default['k8s']['sdn']['interfaces']="-u eno2 -u eno3"
 default['k8s']['sdn']['netmask']="255.255.252.0"
 

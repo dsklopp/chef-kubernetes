@@ -33,6 +33,14 @@ node['k8s']['nodes'].each do |mac, server|
 end
 etcd_connect_2381.chomp(',')
 
+etcd_connect_2378=""
+node['k8s']['nodes'].each do |mac, server|
+	next unless server['master']
+	etcd_connect_2378 += "etcd://" + server['ip']['node-port']
+	etcd_connect_2378 += ":2378,"
+end
+etcd_connect_2378.chomp(',')
+
 masters=[]
 node['k8s']['nodes'].each do |mac, server|
 	next unless server['master']
@@ -60,20 +68,6 @@ if node['k8s']['sdn']['solution'] == "bcf"
 	end
 end
 
-template "/etc/systemd/system/pwx-etcd.service" do
-	source "systemd/pwx-etcd.service.erb"
-	owner "root"
-	group "root"
-	mode "0644"
-	variables({
-		:etcd_image => node['k8s']['images']['etcd-pwx'],
-		:hostname => node['k8s']['nodes'][node['k8s']['macaddress']]['hostname'],
-		:ipaddr => node['k8s']['nodes'][node['k8s']['macaddress']]['ip']['node-port'],
-		:kube_masters => etcd_connect_2380
-		})
-	notifies :run, 'execute[systemctl daemon-reload]', :immediately
-end
-
 template "/etc/systemd/system/etcd.service" do
 	source "systemd/etcd.service.erb"
 	owner "root"
@@ -88,6 +82,39 @@ template "/etc/systemd/system/etcd.service" do
 	notifies :run, 'execute[systemctl daemon-reload]', :immediately
 end
 
+if node['k8s']['storage']['solution'] == "pwx"
+	template "/etc/systemd/system/pwx-etcd.service" do
+		source "systemd/pwx-etcd.service.erb"
+		owner "root"
+		group "root"
+		mode "0644"
+		variables({
+			:image_pwx_init => node['k8s']['images']['etcd-pwx-init'],
+			:image_pwx_enterprise => node['k8s']['images']['etcd-pwx-enterprise'],
+			:hostname => node['k8s']['nodes'][node['k8s']['macaddress']]['hostname'],
+			:ipaddr => node['k8s']['nodes'][node['k8s']['macaddress']]['ip']['node-port'],
+			:kube_masters => etcd_connect_2378
+			})
+		notifies :run, 'execute[systemctl daemon-reload]', :immediately
+	end
+	service "pwx-etcd" do
+		action [ :enable, :start ]
+	end
+	template "/etc/kubernetes/portworx.yaml" do
+		source "systemd/portworx.yaml.erb"
+		owner "root"
+		group "root"
+		mode "0644"
+		variables({
+			:image_px_enterprise => node['k8s']['images']['pwx-enterprise'],
+			:image_px_init => node['k8s']['images']['pwx-init'],
+			:hostname => node['k8s']['nodes'][node['k8s']['macaddress']]['hostname'],
+			:ipaddr => node['k8s']['nodes'][node['k8s']['macaddress']]['ip']['node-port'],
+			:kube_masters => etcd_connect_2380
+			})
+		notifies :run, 'execute[systemctl daemon-reload]', :immediately
+	end
+end
 service "etcd" do
 	action [ :enable, :start ]
 end
