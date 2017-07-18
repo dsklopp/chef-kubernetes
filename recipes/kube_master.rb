@@ -107,8 +107,8 @@ if node['k8s']['storage']['solution'] == "pwx"
 		group "root"
 		mode "0644"
 		variables({
-			:image_px_enterprise => node['k8s']['images']['pwx-enterprise'],
-			:image_px_init => node['k8s']['images']['pwx-init'],
+			:image_pwx_enterprise => node['k8s']['images']['pwx-enterprise'],
+			:image_pwx_init => node['k8s']['images']['pwx-init'],
 			:hostname => node['k8s']['nodes'][node['k8s']['macaddress']]['hostname'],
 			:ipaddr => node['k8s']['nodes'][node['k8s']['macaddress']]['ip']['node-port'],
 			:kube_masters => etcd_connect_2378
