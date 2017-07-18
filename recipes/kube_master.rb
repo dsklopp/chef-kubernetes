@@ -36,7 +36,7 @@ etcd_connect_2381.chomp(',')
 etcd_connect_2378=""
 node['k8s']['nodes'].each do |mac, server|
 	next unless server['master']
-	etcd_connect_2378 += "etcd://" + server['ip']['node-port']
+	etcd_connect_2378 += server['hostname'] + "=http://" + server['ip']['node-port']
 	etcd_connect_2378 += ":2378,"
 end
 etcd_connect_2378.chomp(',')
@@ -89,6 +89,7 @@ if node['k8s']['storage']['solution'] == "pwx"
 		group "root"
 		mode "0644"
 		variables({
+			:etcd_image => node['k8s']['images']['etcd-pwx']
 			:image_pwx_init => node['k8s']['images']['etcd-pwx-init'],
 			:image_pwx_enterprise => node['k8s']['images']['etcd-pwx-enterprise'],
 			:hostname => node['k8s']['nodes'][node['k8s']['macaddress']]['hostname'],
