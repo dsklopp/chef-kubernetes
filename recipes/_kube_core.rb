@@ -13,6 +13,10 @@ sysctl_param "net.bridge.bridge-nf-call-arptables" do
 	value 1
 end
 
+sysctl_param "kernel.sem" do
+	value "250 32000 32 256"
+end
+
 [ 	
 	"/etc/kubernetes", 
 	"/etc/kubernetes/manifests", 
