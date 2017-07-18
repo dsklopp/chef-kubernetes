@@ -89,7 +89,7 @@ if node['k8s']['storage']['solution'] == "pwx"
 		group "root"
 		mode "0644"
 		variables({
-			:etcd_image => node['k8s']['images']['etcd-pwx']
+			:etcd_image => node['k8s']['images']['etcd-pwx'],
 			:image_pwx_init => node['k8s']['images']['etcd-pwx-init'],
 			:image_pwx_enterprise => node['k8s']['images']['etcd-pwx-enterprise'],
 			:hostname => node['k8s']['nodes'][node['k8s']['macaddress']]['hostname'],
