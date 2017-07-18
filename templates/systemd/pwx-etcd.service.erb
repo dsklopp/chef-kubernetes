@@ -9,12 +9,11 @@ ExecStart=/usr/bin/docker \
     --volume=/var/lib/etcd-pwx:/var/lib/etcd \
     --volume=/etc/ssl/certs:/etc/ssl/certs \
         <%= @etcd_image %> \
-    /usr/local/bin/etcd \
     --listen-peer-urls http://0.0.0.0:2381 \
     --listen-client-urls http://0.0.0.0:2378 \
     --data-dir /var/lib/etcd \
     --advertise-client-urls http://0.0.0.0:2378 \
-    --initial-cluster-token bcf-etcd-cluster \
+    --initial-cluster-token pwx-etcd-cluster \
     --initial-cluster-state new \
     --name <%= @hostname %> \
     --initial-advertise-peer-urls http://<%= @ipaddr %>:2381 \
