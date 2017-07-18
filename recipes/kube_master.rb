@@ -28,7 +28,7 @@ etcd_connect_2379.chomp(',')
 etcd_connect_2381=""
 node['k8s']['nodes'].each do |mac, server|
 	next unless server['master']
-	etcd_connect_2381 += "http://" + server['ip']['node-port']
+	etcd_connect_2381 += server['hostname'] + "=http://" + server['ip']['node-port']
 	etcd_connect_2381 += ":2381,"
 end
 etcd_connect_2381.chomp(',')
@@ -36,7 +36,7 @@ etcd_connect_2381.chomp(',')
 etcd_connect_2378=""
 node['k8s']['nodes'].each do |mac, server|
 	next unless server['master']
-	etcd_connect_2378 += server['hostname'] + "=http://" + server['ip']['node-port']
+	etcd_connect_2378 += "etcd://" + server['ip']['node-port']
 	etcd_connect_2378 += ":2378,"
 end
 etcd_connect_2378.chomp(',')
@@ -94,7 +94,7 @@ if node['k8s']['storage']['solution'] == "pwx"
 			:image_pwx_enterprise => node['k8s']['images']['etcd-pwx-enterprise'],
 			:hostname => node['k8s']['nodes'][node['k8s']['macaddress']]['hostname'],
 			:ipaddr => node['k8s']['nodes'][node['k8s']['macaddress']]['ip']['node-port'],
-			:kube_masters => etcd_connect_2378
+			:kube_masters => etcd_connect_2381
 			})
 		notifies :run, 'execute[systemctl daemon-reload]', :immediately
 	end
@@ -111,7 +111,7 @@ if node['k8s']['storage']['solution'] == "pwx"
 			:image_px_init => node['k8s']['images']['pwx-init'],
 			:hostname => node['k8s']['nodes'][node['k8s']['macaddress']]['hostname'],
 			:ipaddr => node['k8s']['nodes'][node['k8s']['macaddress']]['ip']['node-port'],
-			:kube_masters => etcd_connect_2380
+			:kube_masters => etcd_connect_2378
 			})
 		notifies :run, 'execute[systemctl daemon-reload]', :immediately
 	end
