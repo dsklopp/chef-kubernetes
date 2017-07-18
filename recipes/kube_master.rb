@@ -102,7 +102,7 @@ if node['k8s']['storage']['solution'] == "pwx"
 		action [ :enable, :start ]
 	end
 	template "/etc/kubernetes/portworx.yaml" do
-		source "systemd/portworx.yaml.erb"
+		source "manifests/portworx.yaml.erb"
 		owner "root"
 		group "root"
 		mode "0644"
