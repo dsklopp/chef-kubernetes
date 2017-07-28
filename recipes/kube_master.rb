@@ -230,10 +230,10 @@ template "/etc/kubernetes/kube-proxy.yaml" do
 	})
 end
 
-execute "kubectl apply kube-proxy.yaml" do
-	command "kubectl apply -f /etc/kubernetes/kube-proxy.yaml"
-	only_if { node['k8s']['nodes'][node.k8s.macaddress]['node-port'] == masters[0] } # only run on one node
-end 
+#execute "kubectl apply kube-proxy.yaml" do
+#	command "kubectl apply -f /etc/kubernetes/kube-proxy.yaml"
+#	only_if { node['k8s']['nodes'][node.k8s.macaddress]['node-port'] == masters[0] } # only run on one node
+#end 
 
 service "kube-proxy" do
 	action [ :enable, :start]
