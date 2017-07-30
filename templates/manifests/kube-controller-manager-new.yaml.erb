@@ -1,0 +1,56 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  annotations:
+    scheduler.alpha.kubernetes.io/critical-pod: ""
+  labels:
+    component: kube-controller-manager
+    tier: control-plane
+  name: kube-controller-manager
+  namespace: kube-system
+  creationTimestamp: null
+spec:
+  hostNetwork: true
+  containers:
+  - name: kube-controller-manager
+    image: <%= @image %>
+    command:
+    - /usr/local/bin/kube-controller-manager
+    - --master=http://<%= @master %>:8080
+    - --service-account-private-key-file=/etc/kubernetes/pki/sa.key
+    - --cluster-signing-key-file=/etc/kubernetes/pki/ca.key
+    - --use-service-account-credentials=true
+    - --controllers=*,bootstrapsigner,tokencleaner
+    - --kubeconfig=/etc/kubernetes/controller-manager.conf
+    - --root-ca-file=/etc/kubernetes/pki/ca.crt
+    - --cluster-signing-cert-file=/etc/kubernetes/pki/ca.crt
+    - --leader-elect-lease-duration=15s
+    - --leader-elect-renew-deadline=10s
+    - --leader-elect-retry-period=2s
+    - --leader-elect=true
+    - --address=0.0.0.0
+    - --allocate-node-cidrs=true
+    - --cluster-name=<%= @cluster_name %>
+    resources:
+      requests:
+        cpu: 200m
+    livenessProbe:
+      failureThreshold: 8
+      httpGet:
+        host: 127.0.0.1
+        path: /healthz
+        port: 10252
+        scheme: HTTP
+      initialDelaySeconds: 15
+      timeoutSeconds: 15
+  volumes:
+  - hostPath:
+      path: /etc/kubernetes
+    name: k8s
+  - hostPath:
+      path: /etc/ssl/certs
+    name: certs
+  - hostPath:
+      path: /etc/pki
+    name: pki
+status: {}

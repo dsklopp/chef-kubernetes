@@ -161,7 +161,11 @@ template "/etc/kubernetes/manifests/kube-apiserver.yaml" do
 	owner 'root'
 	group 'root'
 	mode '0644'
-	source "manifests/kube-apiserver.yaml.erb"
+	if node['k8s']['new_features']
+		source "manifests/kube-apiserver-new.yaml.erb"
+	else
+		source "manifests/kube-apiserver.yaml.erb"
+	end
 	variables ({
 		:image => node['k8s']['images']['kube-apiserver'],
 		:port => 8080,
@@ -175,7 +179,11 @@ template "/etc/kubernetes/manifests/kube-scheduler.yaml" do
 	owner 'root'
 	group 'root'
 	mode '0644'
-	source "manifests/kube-scheduler.yaml.erb"
+	if node['k8s']['new_features']
+		source "manifests/kube-scheduler-new.yaml.erb"
+	else
+		source "manifests/kube-scheduler.yaml.erb"
+	end
 	variables ({
 		:image => node['k8s']['images']['kube-scheduler'],
 		:master => "127.0.0.1"
@@ -186,7 +194,11 @@ template "/etc/kubernetes/manifests/kube-controller-manager.yaml" do
 	owner 'root'
 	group 'root'
 	mode '0644'
-	source "manifests/kube-controller-manager.yaml.erb"
+	if node['k8s']['new_features']
+		source "manifests/kube-controller-manager-new.yaml.erb"
+	else
+		source "manifests/kube-controller-manager.yaml.erb"
+	end
 	variables ({
 		:image => node['k8s']['images']['kube-controller'],
 		:master => "127.0.0.1",
