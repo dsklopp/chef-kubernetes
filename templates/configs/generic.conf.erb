@@ -1,0 +1,19 @@
+apiVersion: v1
+clusters:
+- cluster:
+    certificate-authority-data: <%= @cert_auth_data %>
+    server: <%= @master_cname %>
+  name: kubernetes
+contexts:
+- context:
+    cluster: kubernetes
+    user: <%= @user %>
+  name: <%= @email %>
+current-context: <%= @email %>
+kind: Config
+preferences: {}
+users:
+- name: <%= @user %>
+  user:
+    client-certificate-data: <%= @client_cert_data %>
+    client-key-data: <%= @client_key_data %>

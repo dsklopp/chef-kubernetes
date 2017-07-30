@@ -89,3 +89,4 @@ default['k8s']['dns_service']['ip']='10.118.45.2'
 default['k8s']['dns_service']['domain']='cluster.local'
 default['k8s']['cluster_name']='test'
 
+default['k8s']['new_features']=false

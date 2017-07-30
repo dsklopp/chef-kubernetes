@@ -22,11 +22,10 @@ template "/etc/systemd/system/kubelet.service" do
 	notifies :restart, 'service[kubelet]', :delayed
 end
 
-
-
 service "kubelet" do
 	action [ :enable, :start]
 end
+
 service "kube-proxy" do
 	action [ :enable, :start]
 end
