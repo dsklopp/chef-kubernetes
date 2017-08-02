@@ -49,7 +49,7 @@ end
 # By default disabled until properly tested
 if node['k8s']['new_features']
 	template "/etc/kubernetes/admin.conf" do
-		source "config/generic.conf.erb"
+		source "configs/generic.conf.erb"
 		mode "0644"
 		group "root"
 		owner "root"
@@ -63,7 +63,7 @@ if node['k8s']['new_features']
 			})
 	end
 	template "/etc/kubernetes/scheduler.conf" do
-		source "config/generic.conf.erb"
+		source "configs/generic.conf.erb"
 		mode "0644"
 		group "root"
 		owner "root"
@@ -77,7 +77,7 @@ if node['k8s']['new_features']
 			})
 	end
 	template "/etc/kubernetes/kubelet.conf" do
-		source "config/generic.conf.erb"
+		source "configs/generic.conf.erb"
 		mode "0644"
 		group "root"
 		owner "root"
@@ -91,7 +91,7 @@ if node['k8s']['new_features']
 			})
 	end
 	template "/etc/kubernetes/controller-manager.conf" do
-		source "config/generic.conf.erb"
+		source "configs/generic.conf.erb"
 		mode "0644"
 		group "root"
 		owner "root"
