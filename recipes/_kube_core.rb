@@ -57,9 +57,9 @@ if node['k8s']['new_features']
 			:email => "kubernetes-admin@kubernetes",
 			:user => "kubernetes-admin",
 			:master_cname => "https://#{node['k8s']['masters']['cname']}:6443",
-			:cert_auth_data => "asdf",
-			:client_cert_data => "asdf",
-			:client_key_data => "asdf"
+			:cert_auth_data => node['k8s']['cert_auth_data'],
+			:client_cert_data => node['k8s']['client_cert_data'],
+			:client_key_data => node['k8s']['client_key_data']
 			})
 	end
 	template "/etc/kubernetes/scheduler.conf" do
@@ -71,9 +71,9 @@ if node['k8s']['new_features']
 			:email => "system:kube-scheduler@kubernetes",
 			:user => "system:kube-scheduler",
 			:master_cname => "https://#{node['k8s']['masters']['cname']}:6443",
-			:cert_auth_data => "asdf",
-			:client_cert_data => "asdf",
-			:client_key_data => "asdf"
+			:cert_auth_data => node['k8s']['cert_auth_data'],
+			:client_cert_data => node['k8s']['client_cert_data'],
+			:client_key_data => node['k8s']['client_key_data']
 			})
 	end
 	template "/etc/kubernetes/kubelet.conf" do
@@ -85,9 +85,9 @@ if node['k8s']['new_features']
 			:email => "system:node:k8s-master@kubernetes",
 			:user => "system:node:k8s-master",
 			:master_cname => "https://#{node['k8s']['masters']['cname']}:6443",
-			:cert_auth_data => "asdf",
-			:client_cert_data => "asdf",
-			:client_key_data => "asdf"
+			:cert_auth_data => node['k8s']['cert_auth_data'],
+			:client_cert_data => node['k8s']['client_cert_data'],
+			:client_key_data => node['k8s']['client_key_data']
 			})
 	end
 	template "/etc/kubernetes/controller-manager.conf" do
@@ -99,9 +99,9 @@ if node['k8s']['new_features']
 			:email => "system:kube-controller-manager@kubernetes",
 			:user => "system:kube-controller-manager",
 			:master_cname => "https://#{node['k8s']['masters']['cname']}:6443",
-			:cert_auth_data => "asdf",
-			:client_cert_data => "asdf",
-			:client_key_data => "asdf"
+			:cert_auth_data => node['k8s']['cert_auth_data'],
+			:client_cert_data => node['k8s']['client_cert_data'],
+			:client_key_data => node['k8s']['client_key_data']
 			})
 	end
 end
