@@ -22,22 +22,22 @@ spec:
     - --allow-privileged=true
     - --requestheader-username-headers=X-Remote-User
     - --requestheader-extra-headers-prefix=X-Remote-Extra-
-    - --kubelet-client-key=/etc/kubernetes/pki/apiserver-kubelet-client.key
-    - --tls-cert-file=/etc/kubernetes/pki/apiserver.crt
-    - --proxy-client-key-file=/etc/kubernetes/pki/front-proxy-client.key
+#    - --kubelet-client-key=/etc/kubernetes/ssl/apiserver-kubelet-client.key
+    - --tls-cert-file=/etc/kubernetes/ssl/apiserver.pem
+#    - --proxy-client-key-file=/etc/kubernetes/ssl/front-proxy-client.key
     - --insecure-port=0
     - --experimental-bootstrap-token-auth=true
     - --requestheader-group-headers=X-Remote-Group
     - --requestheader-allowed-names=front-proxy-client
     - --admission-control=Initializers,NamespaceLifecycle,LimitRanger,ServiceAccount,PersistentVolumeLabel,DefaultStorageClass,DefaultTolerationSeconds,NodeRestriction,ResourceQuota
-    - --client-ca-file=/etc/kubernetes/pki/ca.crt
-    - --tls-private-key-file=/etc/kubernetes/pki/apiserver.key
+    - --client-ca-file=/etc/kubernetes/ssl/ca.pem
+    - --tls-private-key-file=/etc/kubernetes/ssl/apiserver-key.pem
     - --secure-port=<%= @port %>
     - --kubelet-preferred-address-types=InternalIP,ExternalIP,Hostname
     - --service-account-key-file=/etc/kubernetes/pki/sa.pub
-    - --kubelet-client-certificate=/etc/kubernetes/pki/apiserver-kubelet-client.crt
-    - --requestheader-client-ca-file=/etc/kubernetes/pki/front-proxy-ca.crt
-    - --proxy-client-cert-file=/etc/kubernetes/pki/front-proxy-client.crt
+#    - --kubelet-client-certificate=/etc/kubernetes/pki/apiserver-kubelet-client.crt
+#    - --requestheader-client-ca-file=/etc/kubernetes/pki/front-proxy-ca.crt
+#    - --proxy-client-cert-file=/etc/kubernetes/pki/front-proxy-client.crt
     - --authorization-mode=Node,RBAC
     - --logtostderr=true
     - --etcd-servers=<%= @etcd_servers %>
