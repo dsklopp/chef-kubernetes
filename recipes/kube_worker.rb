@@ -4,7 +4,7 @@ api_servers=""
 node['k8s']['nodes'].each do |mac, server|
 	next unless server['master']
 	if node['k8s']['new_features']
-		api_servers += "http://" + server['ip']['node-port'] + ":6443,"
+		api_servers += "https://" + server['ip']['node-port'] + ":6443,"
 	else
 		api_servers += "http://" + server['ip']['node-port'] + ":8080,"
 	end
