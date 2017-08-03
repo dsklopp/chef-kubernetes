@@ -166,14 +166,23 @@ template "/etc/kubernetes/manifests/kube-apiserver.yaml" do
 	else
 		source "manifests/kube-apiserver.yaml.erb"
 	end
+	if node['k8s']['new_features']
 	variables ({
 		:image => node['k8s']['images']['kube-apiserver'],
-		:port => 8080,
-		:kubelet_port => 10250,
+		:port => 6443,
 		:etcd_servers => etcd_connect_2379,
 		:cluster_ip_range => node['k8s']['service_network']['cidr'],
 		:kubemaster_cname => node['k8s']['masters']['cname']
 		})
+	else
+	variables ({
+		:image => node['k8s']['images']['kube-apiserver'],
+		:port => 8080,
+		:etcd_servers => etcd_connect_2379,
+		:cluster_ip_range => node['k8s']['service_network']['cidr'],
+		:kubemaster_cname => node['k8s']['masters']['cname']
+		})
+	end
 end
 template "/etc/kubernetes/manifests/kube-scheduler.yaml" do
 	owner 'root'
