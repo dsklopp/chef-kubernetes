@@ -34,7 +34,7 @@ spec:
     - --tls-private-key-file=/etc/kubernetes/ssl/apiserver-key.pem
     - --secure-port=<%= @port %>
     - --kubelet-preferred-address-types=InternalIP,ExternalIP,Hostname
-    - --service-account-key-file=/etc/kubernetes/pki/sa.pub
+#    - --service-account-key-file=/etc/kubernetes/pki/sa.pub
 #    - --kubelet-client-certificate=/etc/kubernetes/pki/apiserver-kubelet-client.crt
 #    - --requestheader-client-ca-file=/etc/kubernetes/pki/front-proxy-ca.crt
 #    - --proxy-client-cert-file=/etc/kubernetes/pki/front-proxy-client.crt
