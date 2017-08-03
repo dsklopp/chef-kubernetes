@@ -90,7 +90,6 @@ default['k8s']['cluster_name']='test'
 
 default['k8s']['new_features']=false
 
-default['k8s']['cert_auth_data']="unset"
-default['k8s']['client_cert_data']="unset"
-default['k8s']['client_key_data']="unset"
+default['k8s']['client_cert']="unset"
+default['k8s']['client_key']="unset"
 

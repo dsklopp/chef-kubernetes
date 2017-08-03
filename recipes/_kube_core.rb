@@ -58,8 +58,8 @@ if node['k8s']['new_features']
 			:user => "kubernetes-admin",
 			:master_cname => "https://#{node['k8s']['masters']['cname']}:6443",
 			:cert_auth => "/etc/kubernetes/ssl/ca.pem",
-			:client_cert => node['k8s']['client_cert_data'],
-			:client_key => node['k8s']['client_key_data']
+			:client_cert => node['k8s']['client_cert'],
+			:client_key => node['k8s']['client_key']
 			})
 	end
 	template "/etc/kubernetes/scheduler.conf" do
@@ -72,8 +72,8 @@ if node['k8s']['new_features']
 			:user => "system:kube-scheduler",
 			:master_cname => "https://#{node['k8s']['masters']['cname']}:6443",
 			:cert_auth => "/etc/kubernetes/ssl/ca.pem",
-			:client_cert => node['k8s']['client_cert_data'],
-			:client_key => node['k8s']['client_key_data']
+			:client_cert => node['k8s']['client_cert'],
+			:client_key => node['k8s']['client_key']
 			})
 	end
 	template "/etc/kubernetes/kubelet.conf" do
@@ -86,8 +86,8 @@ if node['k8s']['new_features']
 			:user => "system:node:k8s-master",
 			:master_cname => "https://#{node['k8s']['masters']['cname']}:6443",
 			:cert_auth => "/etc/kubernetes/ssl/ca.pem",
-			:client_cert => node['k8s']['client_cert_data'],
-			:client_key => node['k8s']['client_key_data']
+			:client_cert => node['k8s']['client_cert'],
+			:client_key => node['k8s']['client_key']
 			})
 	end
 	template "/etc/kubernetes/controller-manager.conf" do
@@ -100,8 +100,8 @@ if node['k8s']['new_features']
 			:user => "system:kube-controller-manager",
 			:master_cname => "https://#{node['k8s']['masters']['cname']}:6443",
 			:cert_auth => "/etc/kubernetes/ssl/ca.pem",
-			:client_cert => node['k8s']['client_cert_data'],
-			:client_key => node['k8s']['client_key_data']
+			:client_cert => node['k8s']['client_cert'],
+			:client_key => node['k8s']['client_key']
 			})
 	end
 end
