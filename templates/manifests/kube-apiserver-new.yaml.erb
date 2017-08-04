@@ -37,7 +37,7 @@ spec:
     - --secure-port=<%= @port %>
     - --kubelet-preferred-address-types=InternalIP,ExternalIP,Hostname
 #    - --service-account-key-file=/etc/kubernetes/pki/sa.pub
-    - --service-account-lookup true
+    - --service-account-lookup=true
 #    - --kubelet-client-certificate=/etc/kubernetes/pki/apiserver-kubelet-client.crt
 #    - --proxy-client-cert-file=/etc/kubernetes/pki/front-proxy-client.crt
     - --authorization-mode=Node,RBAC
