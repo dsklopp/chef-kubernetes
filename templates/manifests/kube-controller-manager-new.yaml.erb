@@ -16,7 +16,7 @@ spec:
     image: <%= @image %>
     command:
     - /usr/local/bin/kube-controller-manager
-    - --master=http://<%= @master %>:8080
+    - --master=https://<%= @master %>:6443
     - --service-account-private-key-file=/etc/kubernetes/pki/sa.key
     - --cluster-signing-key-file=/etc/kubernetes/pki/ca.key
     - --use-service-account-credentials=true
