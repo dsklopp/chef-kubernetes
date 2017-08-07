@@ -26,7 +26,6 @@ spec:
     - --requestheader-allowed-names=front-proxy-client
     - --requestheader-client-ca-file=/etc/kubernetes/ssl/ca.pem
     - --tls-cert-file=/etc/kubernetes/ssl/apiserver.pem
-    - --insecure-port=0
     - --experimental-bootstrap-token-auth=true
     - --admission-control=Initializers,NamespaceLifecycle,LimitRanger,ServiceAccount,PersistentVolumeLabel,DefaultStorageClass,DefaultTolerationSeconds,NodeRestriction,ResourceQuota
     - --client-ca-file=/etc/kubernetes/ssl/ca.pem
@@ -37,7 +36,7 @@ spec:
     - --authorization-mode=Node,RBAC
     - --logtostderr=true
     - --etcd-servers=<%= @etcd_servers %>
-    - --address=0.0.0.0    
+    - --insecure-port=8080
     - --service-cluster-ip-range=<%= @cluster_ip_range %>
     livenessProbe:
       failureThreshold: 8
