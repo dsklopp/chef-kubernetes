@@ -16,7 +16,7 @@ spec:
     image: <%= @image %>
     command:
     - /usr/local/bin/kube-scheduler
-    - --master=https://<%= @master %>:6443
+    - --master=http://127.0.0.1:8080
     - --address=0.0.0.0
     - --leader-elect=true
     - --kubeconfig=/etc/kubernetes/scheduler.conf
