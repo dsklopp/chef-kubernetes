@@ -1,0 +1,27 @@
+[Unit]
+Description=etcd: The etcd Agent
+Documentation=https://github.com/coreos/etcd
+
+[Service]
+ExecStart=/usr/bin/docker \
+    run --rm --net=host \
+    --name etcd-v3.1.5 \
+    --volume=/var/lib/etcd-data:/etcd-data \
+    <%= @etcd_image %> \
+    /usr/local/bin/etcd \
+    --name <%= @hostname %> \
+    --data-dir /etcd-data \
+    --listen-client-urls http://<%= @ipaddr %>:2379 \
+    --advertise-client-urls http://<%= @ipaddr %>:2379 \
+    --listen-peer-urls http://<%= @ipaddr %>:2380 \
+    --initial-advertise-peer-urls http://<%= @ipaddr %>:2380 \
+    --initial-cluster <%= @kube_masters %> \
+    --initial-cluster-token my-etcd-token \
+    --initial-cluster-state new \
+    --auto-compaction-retention 1
+Restart=always
+StartLimitInterval=0
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

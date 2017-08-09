@@ -54,7 +54,11 @@ end
 
 if node['k8s']['sdn']['solution'] == "bcf"
 	template "/etc/systemd/system/bcf-etcd.service" do
-		source "systemd/bcf-etcd.service.erb"
+		if node['k8s']['new_features']
+			source "systemd/bcf-etcd-new.service.erb"
+		else
+			source "systemd/bcf-etcd.service.erb"
+		end
 		owner "root"
 		group "root"
 		mode "0644"
@@ -69,7 +73,11 @@ if node['k8s']['sdn']['solution'] == "bcf"
 end
 
 template "/etc/systemd/system/etcd.service" do
-	source "systemd/etcd.service.erb"
+	if node['k8s']['new_features']
+		source "systemd/etcd-new.service.erb"
+	else
+		source "systemd/etcd.service.erb"
+	end
 	owner "root"
 	group "root"
 	mode "0644"
@@ -170,6 +178,7 @@ template "/etc/kubernetes/manifests/kube-apiserver.yaml" do
 	variables ({
 		:image => node['k8s']['images']['kube-apiserver'],
 		:port => 6443,
+		:ipaddr => node['k8s']['nodes'][node['k8s']['macaddress']]['ip']['node-port'],
 		:etcd_servers => etcd_connect_2379,
 		:cluster_ip_range => node['k8s']['service_network']['cidr'],
 		:kubemaster_cname => node['k8s']['masters']['cname']
@@ -190,13 +199,19 @@ template "/etc/kubernetes/manifests/kube-scheduler.yaml" do
 	mode '0644'
 	if node['k8s']['new_features']
 		source "manifests/kube-scheduler-new.yaml.erb"
+		variables ({
+			:image => node['k8s']['images']['kube-scheduler'],
+			:ipaddr => node['k8s']['nodes'][node['k8s']['macaddress']]['ip']['node-port'],
+			:master => "127.0.0.1"
+		})
 	else
 		source "manifests/kube-scheduler.yaml.erb"
-	end
-	variables ({
-		:image => node['k8s']['images']['kube-scheduler'],
-		:master => "127.0.0.1"
+		variables ({
+			:image => node['k8s']['images']['kube-scheduler'],
+			:master => "127.0.0.1"
 		})
+	end
+	
 end
 
 template "/etc/kubernetes/manifests/kube-controller-manager.yaml" do
@@ -205,14 +220,20 @@ template "/etc/kubernetes/manifests/kube-controller-manager.yaml" do
 	mode '0644'
 	if node['k8s']['new_features']
 		source "manifests/kube-controller-manager-new.yaml.erb"
+		variables ({
+			:image => node['k8s']['images']['kube-controller'],
+			:master => "127.0.0.1",
+			:ipaddr => node['k8s']['nodes'][node['k8s']['macaddress']]['ip']['node-port'],
+			:cluster_name => node['k8s']['cluster_name']
+		})
 	else
 		source "manifests/kube-controller-manager.yaml.erb"
-	end
-	variables ({
-		:image => node['k8s']['images']['kube-controller'],
-		:master => "127.0.0.1",
-		:cluster_name => node['k8s']['cluster_name']
+		variables ({
+			:image => node['k8s']['images']['kube-controller'],
+			:master => "127.0.0.1",
+			:cluster_name => node['k8s']['cluster_name']
 		})
+	end
 end
 
 template "/etc/systemd/system/kubelet.service" do
