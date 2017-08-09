@@ -12,7 +12,7 @@ ExecStart=/usr/bin/kubelet \
 	--cluster-domain=<%= @cluster_domain %> \
 	--authorization-mode=Webhook \
 	--cadvisor-port=0 \
-	--cgroup-driver=systemd \
+	--cgroup-driver=cgroupfs \
 	--network-plugin=cni \
 	--client-ca-file=/etc/kubernetes/ssl/ca.crt \
 	--network-plugin-dir=/etc/cni/net.d \
