@@ -24,12 +24,18 @@ spec:
     - --requestheader-extra-headers-prefix=X-Remote-Extra-
     - --requestheader-group-headers=X-Remote-Group
     - --requestheader-allowed-names=front-proxy-client
-    - --requestheader-client-ca-file=/etc/kubernetes/ssl/ca.pem
-    - --tls-cert-file=/etc/kubernetes/ssl/apiserver.pem
+    - --requestheader-client-ca-file=/etc/kubernetes/ssl/ca.crt
+    - --service-account-key-file=/etc/kubernetes/ssl/sa.pub
+    - --tls-cert-file=/etc/kubernetes/ssl/apiserver.crt
+    - --kubelet-client-certificate=/etc/kubernetes/ssl/apiserver-kubelet-client.crt
+    - --kubelet-client-key=/etc/kubernetes/ssl/apiserver-kubelet-client.key
+    - --requestheader-client-ca-file=/etc/kubernetes/ssl/front-proxy-ca.crt
+    - --proxy-client-cert-file=/etc/kubernetes/ssl/front-proxy-client.crt
+    - --proxy-client-key-file=/etc/kubernetes/ssl/front-proxy-client.key
     - --experimental-bootstrap-token-auth=true
     - --admission-control=Initializers,NamespaceLifecycle,LimitRanger,ServiceAccount,PersistentVolumeLabel,DefaultStorageClass,DefaultTolerationSeconds,NodeRestriction,ResourceQuota
-    - --client-ca-file=/etc/kubernetes/ssl/ca.pem
-    - --tls-private-key-file=/etc/kubernetes/ssl/apiserver-key.pem
+    - --client-ca-file=/etc/kubernetes/ssl/ca.crt
+    - --tls-private-key-file=/etc/kubernetes/ssl/apiserver.key
     - --secure-port=<%= @port %>
     - --kubelet-preferred-address-types=InternalIP,ExternalIP,Hostname
     - --service-account-lookup=true

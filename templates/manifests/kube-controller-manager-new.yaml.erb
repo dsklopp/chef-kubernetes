@@ -17,13 +17,13 @@ spec:
     command:
     - /usr/local/bin/kube-controller-manager
     - --master=http://127.0.0.1:8080
-    - --service-account-private-key-file=/etc/kubernetes/ssl/sa-key.pem
-    - --cluster-signing-key-file=/etc/kubernetes/ssl/ca-key.pem
+    - --service-account-private-key-file=/etc/kubernetes/ssl/sa.key
+    - --cluster-signing-key-file=/etc/kubernetes/ssl/ca.key
     - --use-service-account-credentials=true
     - --controllers=*,bootstrapsigner,tokencleaner
     - --kubeconfig=/etc/kubernetes/controller-manager.conf
-    - --root-ca-file=/etc/kubernetes/ssl/ca.pem
-    - --cluster-signing-cert-file=/etc/kubernetes/ssl/ca.pem
+    - --root-ca-file=/etc/kubernetes/ssl/ca.crt
+    - --cluster-signing-cert-file=/etc/kubernetes/ssl/ca.crt
     - --leader-elect-lease-duration=15s
     - --leader-elect-renew-deadline=10s
     - --leader-elect-retry-period=2s
