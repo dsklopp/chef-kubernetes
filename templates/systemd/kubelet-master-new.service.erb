@@ -5,12 +5,12 @@ Documentation=http://kubernetes.io/docs
 [Service]
 ExecStart=/usr/bin/kubelet \
 	--pod-manifest-path /etc/kubernetes/manifests/ \
+	--allow-privileged true \
 	--kubeconfig=/etc/kubernetes/kubelet.conf \
 	--require-kubeconfig=true \
 	--cluster-dns=<%= @cluster_dns_server %> \
 	--cluster-domain=<%= @cluster_domain %> \
 	--authorization-mode=Webhook \
-	--allow-privileged true \
 	--cadvisor-port=0 \
 	--cgroup-driver=systemd \
 	--network-plugin=cni \
