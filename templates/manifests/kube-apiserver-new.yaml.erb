@@ -20,6 +20,7 @@ spec:
     command:
     - /usr/local/bin/kube-apiserver
     - --allow-privileged=true
+    - --bind-address=<%= @ipaddr %>
     - --requestheader-username-headers=X-Remote-User
     - --requestheader-extra-headers-prefix=X-Remote-Extra-
     - --requestheader-group-headers=X-Remote-Group
