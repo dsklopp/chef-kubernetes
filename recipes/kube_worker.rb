@@ -12,10 +12,15 @@ end
 api_servers.chomp(',')
 
 template "/etc/systemd/system/kubelet.service" do
-	source "systemd/kubelet-agent.service.erb"
+	
 	owner "root"
 	group "root"
 	mode "0644"
+	if node['k8s']['new_features']
+		source "systemd/kubelet-agent-new.service.erb"
+	else
+		source "systemd/kubelet-agent.service.erb"
+	end
 	variables({
 		:pod_infra_container_image => node['k8s']['images']['pod_infra_container_image'],
 		:api_servers => api_servers,
