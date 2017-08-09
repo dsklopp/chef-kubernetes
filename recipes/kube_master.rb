@@ -237,10 +237,14 @@ template "/etc/kubernetes/manifests/kube-controller-manager.yaml" do
 end
 
 template "/etc/systemd/system/kubelet.service" do
-	source "systemd/kubelet-master.service.erb"
 	owner "root"
 	group "root"
 	mode "0644"
+	if node['k8s']['new_features']
+		source "systemd/kubelet-master-new.service.erb"
+	else
+		source "systemd/kubelet-master.service.erb"
+	end
 	variables({
 		:pod_infra_container_image => node['k8s']['images']['pod_infra_container_image'],
 		:cluster_domain => node['k8s']['dns_service']['domain'],
