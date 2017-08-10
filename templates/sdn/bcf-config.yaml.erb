@@ -5,7 +5,7 @@ bcf_config:
   passwd: <%= @password %>
   segments:
     - cidr: <%= @network_nodes %>
-      name: nodes
+      name: bcf-nodes
     - cidr: <%= @network_default %>
       name: default
     - cidr: <%= @network_kube_system %>
