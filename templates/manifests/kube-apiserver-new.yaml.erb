@@ -38,7 +38,6 @@ spec:
     - --tls-private-key-file=/etc/kubernetes/pki/apiserver.key
     - --secure-port=<%= @port %>
     - --kubelet-preferred-address-types=InternalIP,ExternalIP,Hostname
-    - --service-account-lookup=true
     - --authorization-mode=Node,RBAC
     - --logtostderr=true
     - --etcd-servers=<%= @etcd_servers %>
