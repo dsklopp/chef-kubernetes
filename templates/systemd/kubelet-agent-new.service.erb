@@ -11,7 +11,7 @@ ExecStart=/usr/bin/kubelet \
     --cluster-dns=<%= @cluster_dns_server %> \
     --cluster-domain=<%= @cluster_domain %> \
     --authorization-mode=Webhook \
-    --client-ca-file=/etc/kubernetes/ssl/ca.crt \
+    --client-ca-file=/etc/kubernetes/pki/ca.crt \
     --cadvisor-port=0 \
     --cgroup-driver=cgroupfs \
 	--api-servers=<%= @api_servers %> \
