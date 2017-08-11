@@ -11,7 +11,7 @@ spec:
     command:
     - /usr/local/bin/kube-apiserver
     - --logtostderr=true
-    - --port=<%= @port %>
+    - --port=10250
     - --kubelet-port=<%= @kubelet_port %>
     - --etcd-servers=<%= @etcd_servers %>
     - --address=0.0.0.0
