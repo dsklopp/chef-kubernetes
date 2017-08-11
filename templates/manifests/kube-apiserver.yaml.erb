@@ -11,8 +11,8 @@ spec:
     command:
     - /usr/local/bin/kube-apiserver
     - --logtostderr=true
-    - --port=10250
-    - --kubelet-port=<%= @kubelet_port %>
+    - --port=8080
+    - --kubelet-port=10250
     - --etcd-servers=<%= @etcd_servers %>
     - --address=0.0.0.0
     - --allow-privileged=true
