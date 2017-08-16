@@ -11,8 +11,8 @@ bcf_config:
     - cidr: <%= @network_kube_system %>
       name: kube-system
 <% @network_extra.each do |net| %>
-    - cidr: <%= net['name'] %>
-      name: <%= net['network'] %>
+    - cidr: <%= net['network'] %>
+      name: <%= net['name'] %>
 <% end %>
   tenant: <%= @tenant %>
   user: <%= @user %>
