@@ -25,12 +25,12 @@ sysctl_param "kernel.sem" do
 	value "250 32000 32 256"
 end
 
-template "/etc/security/limits.d/kubernetes.conf" do
-	source "sysconfig/kubernetes.conf.erb"
-	owner "root"
-	group "root"
-	mode 0644
-end
+#template "/etc/security/limits.d/kubernetes.conf" do
+#	source "sysconfig/kubernetes.conf.erb"
+#	owner "root"
+#	group "root"
+#	mode 0644
+#end
 
 [ 	
 	"/etc/kubernetes", 
