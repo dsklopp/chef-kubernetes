@@ -13,6 +13,14 @@ sysctl_param "net.bridge.bridge-nf-call-arptables" do
 	value 1
 end
 
+sysctl_param "net.ipv4.ip_local_port_range" do
+	value "15000 61000"
+end
+
+sysctl_param "net.ipv4.tcp_fin_timeout" do
+	value 30
+end
+
 sysctl_param "kernel.sem" do
 	value "250 32000 32 256"
 end
