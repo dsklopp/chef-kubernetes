@@ -1,53 +1,25 @@
 include_recipe "#{cookbook_name}::_kube_docker"
 include_recipe "sysctl::default"
 
-sysctl_param "net.bridge.bridge-nf-call-iptables" do
-	value 1
+template "/etc/sysctl.d/01-kubernetes.conf" do
+	source "sysctl/01-kubernetes.conf"
+	group "root"
+	owner "root"
+	mode 0644
+	notifies :run, 'execute[reload sysctl]', :immediately
 end
 
-sysctl_param "net.bridge.bridge-nf-call-ip6tables" do
-	value 1
+execute "reload sysctl" do
+	command "sysctl --system"
+	action :nothing
 end
 
-sysctl_param "net.bridge.bridge-nf-call-arptables" do
-	value 1
+template "/etc/security/limits.d/kubernetes.conf" do
+	source "sysconfig/kubernetes.conf.erb"
+	owner "root"
+	group "root"
+	mode 0644
 end
-
-sysctl_param "net.ipv4.ip_local_port_range" do
-	value "15000 61000"
-end
-
-sysctl_param "net.ipv4.tcp_fin_timeout" do
-	value 30
-end
-
-sysctl_param "net.core.somaxconn" do
-	value "1024"
-end
-
-
-sysctl_param "net.core.somaxconn" do
-	value "1024"
-end
-
-sysctl_param "net.core.netdev_max_backlog" do
-	value "2000"
-end
-
-sysctl_param "net.ipv4.tcp_max_syn_backlog" do
-	value "2048"
-end
-
-sysctl_param "kernel.sem" do
-	value "250 32000 32 256"
-end
-
-#template "/etc/security/limits.d/kubernetes.conf" do
-#	source "sysconfig/kubernetes.conf.erb"
-#	owner "root"
-#	group "root"
-#	mode 0644
-#end
 
 [ 	
 	"/etc/kubernetes", 
