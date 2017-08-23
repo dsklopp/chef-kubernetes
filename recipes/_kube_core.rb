@@ -21,6 +21,10 @@ template "/etc/security/limits.d/kubernetes.conf" do
 	mode 0644
 end
 
+service "NetworkManager" do
+	action [ :disable, :stop ]
+end
+
 [ 	
 	"/etc/kubernetes", 
 	"/etc/kubernetes/manifests", 
