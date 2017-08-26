@@ -94,3 +94,4 @@ default['k8s']['new_features']=false
 default['k8s']['client_cert']="unset"
 default['k8s']['client_key']="unset"
 
+default['k8s']['key_interface']="eno1" # mgmt interface, used by portwork as well
