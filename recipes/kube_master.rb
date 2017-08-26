@@ -119,7 +119,8 @@ if node['k8s']['storage']['solution'] == "pwx"
 			:image_pwx_init => node['k8s']['images']['pwx-init'],
 			:hostname => node['k8s']['nodes'][node['k8s']['macaddress']]['hostname'],
 			:ipaddr => node['k8s']['nodes'][node['k8s']['macaddress']]['ip']['node-port'],
-			:kube_masters => etcd_connect_2378
+			:kube_masters => etcd_connect_2378,
+			:mgmt_interface => node['k8s']['key_interface']
 			})
 		notifies :run, 'execute[systemctl daemon-reload]', :immediately
 	end
