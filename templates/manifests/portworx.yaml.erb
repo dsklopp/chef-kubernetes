@@ -55,7 +55,7 @@ spec:
              ["-k <%= @kube_masters -%>",
               "-c nio-px-cluster",
               "-d node-port",
-              "-m eno1",
+              "-m <%= @mgmt_interface -%>",
               "-a -f",
               "",
               "",
