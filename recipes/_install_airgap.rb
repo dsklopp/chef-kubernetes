@@ -16,14 +16,25 @@ cni_version = node['k8s']['cni-binaries']['version']
 		action :create
 	end
 end
-
-[ "bridge", "cnitool", "dhcp", "flannel", "host-local", "ipvlan",
-	"loopback", "macvlan", "noop", "ptp", "tuning" ].each do |binary|
-	remote_file "/opt/cni/bin/#{binary}" do
-		source "#{cni_dl_url}/#{cni_version}/#{binary}"
-		owner "root"
-		group "root"
-		mode "0755"
-		action :create
+if cni_version == "0.6.0"
+	[ "cnitool", "noop" ].each do |binary|
+		remote_file "/opt/cni/bin/#{binary}" do
+			source "#{cni_dl_url}/#{cni_version}/#{binary}"
+			owner "root"
+			group "root"
+			mode "0755"
+			action :create
+		end
+	end
+else
+	[ "bridge", "cnitool", "dhcp", "flannel", "host-local", "ipvlan",
+		"loopback", "macvlan", "noop", "ptp", "tuning" ].each do |binary|
+		remote_file "/opt/cni/bin/#{binary}" do
+			source "#{cni_dl_url}/#{cni_version}/#{binary}"
+			owner "root"
+			group "root"
+			mode "0755"
+			action :create
+		end
 	end
 end
