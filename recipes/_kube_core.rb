@@ -43,7 +43,9 @@ end
 if node['k8s']['airgap_install']
 	include_recipe "#{cookbook_name}::_install_airgap"
 	package "bridge-utils"
-	package "bcf-cni"
+	package "bcf-cni" do
+		action :upgrade
+	end
 	# We will replace this with our own version
 	file "/lib/systemd/system/bcf-agent-etcd.service" do
 		action :delete
