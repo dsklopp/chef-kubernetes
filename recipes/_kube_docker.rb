@@ -10,7 +10,7 @@ end
 package "docker-engine" do
 	version "1.12.6-1.el7.centos"
 	action :install
-	notifies :restart, "service[docker]", :delayed
+	notifies :restart, "service[docker]", :immediately
 end
 
 execute "reload systemctl" do
