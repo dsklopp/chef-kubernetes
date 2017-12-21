@@ -39,7 +39,7 @@ node['k8s']['nodes'].each do |mac, server|
 	etcd_connect_2378 += "etcd://" + server['ip']['node-port']
 	etcd_connect_2378 += ":2378,"
 end
-etcd_connect_2378.chomp(',')
+etcd_connect_2378.chomp(',').chomp(',')
 
 masters=[]
 node['k8s']['nodes'].each do |mac, server|
@@ -284,4 +284,15 @@ end
 
 service "kube-proxy" do
 	action [ :enable, :start]
+end
+
+template "/etc/kubernetes/coredns.yaml" do
+	source "manifests/coredns.yaml.erb"
+	owner "root"
+	group "root"
+	mode "0644"
+	variables({
+		:api_server_host => node['k8s']['nodes'][node['macaddress']]['ip']['node-port'],
+		:coredns_image => node['k8s']['images']['coredns']
+		})
 end

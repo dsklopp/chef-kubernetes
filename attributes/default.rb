@@ -40,6 +40,7 @@ default['k8s']['images'].tap do |image|
 	image['kube-scheduler']="gcr.io/google_containers/kube-scheduler-amd64:v1.5.6"
 	image['kube-controller']="gcr.io/google_containers/kube-controller-manager-amd64:v1.5.6"
 	image['pod_infra_container_image'] = "gcr.io/google_containers/pause:0.8.0"
+	image['coredns'] = "hub.docker.com/coredns:latest"
 end
 
 default['k8s']['node-ports']['netmask']='255.255.255.0'
